@@ -1,10 +1,10 @@
-# app.py
 """Application entry point with dependency injection"""
 
-from flask import Flask, jsonify
-from data import UserRepository
-from service import UserService
-from web import UserController
+from flask import jsonify, Flask
+from src.data import UserRepository
+from src.service import UserService
+from src.web import UserController
+
 
 def create_app():
     """Factory function to create and configure the Flask app"""

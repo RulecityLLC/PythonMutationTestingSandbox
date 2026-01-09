@@ -1,4 +1,3 @@
-# data_layer.py
 """Data access layer - stubbed implementation"""
 
 

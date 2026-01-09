@@ -1,6 +1,7 @@
 """API endpoints and request handling"""
 
-from flask import Flask, jsonify, request
+from flask import jsonify, request
+
 
 class UserController:
     """Handles HTTP requests for users"""

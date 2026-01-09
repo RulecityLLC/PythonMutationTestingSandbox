@@ -1,4 +1,3 @@
-# service_layer.py
 """Business logic layer"""
 
 
