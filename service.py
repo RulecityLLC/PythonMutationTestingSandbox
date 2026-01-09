@@ -1,0 +1,33 @@
+# service_layer.py
+"""Business logic layer"""
+
+
+class UserService:
+    """Handles business logic for users"""
+
+    def __init__(self, repository):
+        self.repository = repository
+
+    def get_all_users(self):
+        """Get all users with business logic applied"""
+        users = self.repository.get_all()
+        # Add any business logic here
+        return users
+
+    def get_user(self, user_id):
+        """Get a specific user"""
+        user = self.repository.get_by_id(user_id)
+        if not user:
+            raise ValueError(f"User with id {user_id} not found")
+        return user
+
+    def create_user(self, user_data):
+        """Create a new user with validation"""
+        # Business logic: validate input
+        if not user_data.get("name"):
+            raise ValueError("Name is required")
+        if not user_data.get("email"):
+            raise ValueError("Email is required")
+
+        # Delegate to repository
+        return self.repository.create(user_data)
