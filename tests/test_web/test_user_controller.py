@@ -6,6 +6,7 @@ from src.web import UserController
 from flask import Flask
 import pytest
 
+# see https://flask.palletsprojects.com/en/stable/appcontext/#creating-an-application-context for the need for this app_context
 @pytest.fixture(scope="class")
 def flask_context_fixture():
     app = Flask(__name__)
