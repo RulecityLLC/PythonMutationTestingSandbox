@@ -1,7 +1,7 @@
 """Tests for UserRepository"""
 
 import unittest
-from src.data import UserRepository
+from sample_web_svc.data import UserRepository
 
 
 class TestUserRepository(unittest.TestCase):

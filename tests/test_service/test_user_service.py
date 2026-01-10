@@ -2,7 +2,7 @@
 
 import unittest
 from unittest.mock import MagicMock
-from src.service import UserService
+from sample_web_svc.service import UserService
 
 
 class TestUserService(unittest.TestCase):

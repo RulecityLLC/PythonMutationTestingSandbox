@@ -1,9 +1,9 @@
 """Application entry point with dependency injection"""
 
 from flask import jsonify, Flask
-from src.data import UserRepository
-from src.service import UserService
-from src.web import UserController
+from sample_web_svc.data import UserRepository
+from sample_web_svc.service import UserService
+from sample_web_svc.web import UserController
 
 
 def create_app():

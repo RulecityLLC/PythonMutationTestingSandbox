@@ -2,7 +2,7 @@
 
 import unittest
 from unittest.mock import MagicMock
-from src.web import UserController
+from sample_web_svc.web import UserController
 from flask import Flask
 import pytest
 

@@ -38,7 +38,7 @@ python -m pytest tests/
 python -m pytest tests/test_service/
 
 # Run with coverage
-python -m pytest --cov=src tests/
+python -m pytest --cov=sample_web_svc tests/
 ```
 
 ## API Endpoints
