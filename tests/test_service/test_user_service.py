@@ -6,6 +6,7 @@ from src.service import UserService
 
 
 class TestUserService(unittest.TestCase):
+    """Unit tests for UserService"""
 
     def setUp(self):
         self.mock_repo = MagicMock()
@@ -24,7 +25,7 @@ class TestUserService(unittest.TestCase):
             "id": 1, "name": "Alice", "email": "alice@example.com"
         }
         user = self.service.get_user(1)
-        self.assertEqual(user['name'], 'Alice')
+        self.assertEqual(user["name"], "Alice")
 
     def test_get_user_not_found(self):
         self.mock_repo.get_by_id.return_value = None
@@ -49,5 +50,5 @@ class TestUserService(unittest.TestCase):
             "name": "Charlie",
             "email": "charlie@example.com"
         })
-        self.assertEqual(user['name'], 'Charlie')
+        self.assertEqual(user["name"], "Charlie")
         self.mock_repo.create.assert_called_once()

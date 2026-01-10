@@ -6,7 +6,7 @@ from src.web import UserController
 from flask import Flask
 import pytest
 
-# see https://flask.palletsprojects.com/en/stable/appcontext/#creating-an-application-context for the need for this app_context
+# app context needed for flask tests
 @pytest.fixture(scope="class")
 def flask_context_fixture():
     app = Flask(__name__)
@@ -15,6 +15,7 @@ def flask_context_fixture():
 
 @pytest.mark.usefixtures("flask_context_fixture")
 class TestUserController(unittest.TestCase):
+    """Unit tests for UserController"""
 
     def setUp(self):
         self.mock_service = MagicMock()

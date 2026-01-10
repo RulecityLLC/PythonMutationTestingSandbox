@@ -5,6 +5,7 @@ from src.data import UserRepository
 
 
 class TestUserRepository(unittest.TestCase):
+    """Unit tests to User Repository"""
 
     def setUp(self):
         self.repo = UserRepository()
@@ -26,8 +27,8 @@ class TestUserRepository(unittest.TestCase):
 
     def test_create_user(self):
         new_user = self.repo.create({
-            "name": "Charlie",
-            "email": "charlie@example.com"
+            'name': 'Charlie',
+            'email': 'charlie@example.com'
         })
         self.assertIsNotNone(new_user['id'])
         self.assertEqual(new_user['name'], 'Charlie')
