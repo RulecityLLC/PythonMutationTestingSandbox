@@ -1,0 +1,47 @@
+name: Pull request gate using python/mutmut
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  pr_gate:
+    runs-on:
+      # adjust this for your specific environment
+      group: MullRunnerGroup
+      labels: self-hosted
+
+    steps:      
+    - uses: actions/checkout@v4
+
+    - name: Create virtual environment
+      working-directory: ${{github.workspace}}
+      run: python3 -m venv .venv
+
+    - name: Install required packages
+      working-directory: ${{github.workspace}}
+      run: |
+        source .venv/bin/activate
+        pip install -r requirements.txt
+        git clone https://github.com/boxed/mutmut.git
+        pip install -e mutmut
+
+    - name: Build/run unit/mutation tests
+      working-directory: ${{github.workspace}}
+      run: |
+        source .venv/bin/activate
+        mutmut run
+
+    - name: Enforce mutation score threshold
+      working-directory: ${{github.workspace}}
+      run: |
+        source .venv/bin/activate
+        mutmut export-cicd-stats
+        ci/mutation_score_check.py mutants/mutmut-cicd-stats.json 45
+    
+    - name: Print survived mutants
+      if: ${{ failure() }}
+      working-directory: ${{github.workspace}}
+      run: |
+        source .venv/bin/activate
+        ci/mutmut_parser.py
