@@ -31,3 +31,17 @@ jobs:
       run: |
         source .venv/bin/activate
         mutmut run
+
+    - name: Enforce mutation score threshold
+      working-directory: ${{github.workspace}}
+      run: |
+        source .venv/bin/activate
+        mutmut export-cicd-stats
+        ci/mutation_score_check.py mutants/mutmut-cicd-stats.json 50
+    
+    - name: Print survived mutants
+      if: failed() # this can be a slower process so we only want to do it if the developer needs it
+      working-directory: ${{github.workspace}}
+      run: |
+        source .venv/bin/activate
+        ci/mutmut_parser.py
