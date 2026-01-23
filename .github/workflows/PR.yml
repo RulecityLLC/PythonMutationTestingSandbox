@@ -16,7 +16,11 @@ jobs:
 
     - name: Create virtual environment
       working-directory: ${{github.workspace}}
-      run: python3 -m venv .env
+      run: python3 -m venv && source .venv/bin/activate
+
+    - name: Restore required packages
+      working-directory: ${{github.workspace}}
+      run: pip install -r requirements.txt
 
     - name: Install mutmut that includes CI/CD feature
       working-directory: ${{github.workspace}}
