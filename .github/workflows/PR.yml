@@ -40,7 +40,7 @@ jobs:
         ci/mutation_score_check.py mutants/mutmut-cicd-stats.json 50
     
     - name: Print survived mutants
-      if: failed() # this can be a slower process so we only want to do it if the developer needs it
+      if: ${{ failure() }}
       working-directory: ${{github.workspace}}
       run: |
         source .venv/bin/activate
