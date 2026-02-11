@@ -26,29 +26,32 @@ class TestUserService(unittest.TestCase):
         }
         user = self.service.get_user(1)
         self.assertEqual(user["name"], "Alice")
+        self.mock_repo.get_by_id.assert_called_with(1)
 
     def test_get_user_not_found(self):
         self.mock_repo.get_by_id.return_value = None
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError) as context:
             self.service.get_user(999)
+        self.assertEqual("User with id 999 not found", str(context.exception))
 
     def test_create_user_validation_no_name(self):
         with self.assertRaises(ValueError) as context:
             self.service.create_user({"email": "test@example.com"})
-        self.assertIn("Name is required", str(context.exception))
+        self.assertEqual("Name is required", str(context.exception))
 
     def test_create_user_validation_no_email(self):
         with self.assertRaises(ValueError) as context:
             self.service.create_user({"name": "Test"})
-        self.assertIn("Email is required", str(context.exception))
+        self.assertEqual("Email is required", str(context.exception))
 
     def test_create_user_success(self):
         self.mock_repo.create.return_value = {
             "id": 3, "name": "Charlie", "email": "charlie@example.com"
         }
-        user = self.service.create_user({
+        user_data = {
             "name": "Charlie",
             "email": "charlie@example.com"
-        })
+        }
+        user = self.service.create_user(user_data)
         self.assertEqual(user["name"], "Charlie")
-        self.mock_repo.create.assert_called_once()
+        self.mock_repo.create.assert_called_with(user_data)
