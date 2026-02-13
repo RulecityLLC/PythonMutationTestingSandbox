@@ -1,56 +1,93 @@
-# REST API with Layered Architecture
- 
-A sample REST API built with Flask demonstrating clean architecture principles.
- 
-## Directory Structure
- 
-```
-project_root/
- ├── src/               # Application source code
- │   ├── data/         # Data access layer (repositories)
- │   ├── service/      # Business logic layer
- │   └── web/          # Web/API layer (controllers)
- ├── tests/            # Test files mirroring src structure
- │   ├── test_data/
- │   ├── test_service/
- │   └── test_web/
- ├── app.py            # Application entry point
- └── requirements.txt  # Python dependencies
- ```
- 
+# PythonMutationTestingSandbox
+
+Sample repo showing how to enforce mutation testing threshold gates on pull requests
+
 ## Setup
  
 ```bash
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate
+
 # Install dependencies
 pip install -r requirements.txt
-
-# Run the application
-python app.py
 ```
 
-## Running Tests
+## Running unit tests
 
 ```bash
 # Run all tests
 python -m pytest tests/
-
-# Run specific layer tests
-python -m pytest tests/test_service/
-
-# Run with coverage
-python -m pytest --cov=sample_web_svc tests/
 ```
 
-## API Endpoints
+## Running web server
+```bash
+# Run the application
+python app.py
+```
+
+## Testing the API
 
 - `GET /users` - Get all users
 - `GET /users/<id>` - Get user by ID
 - `POST /users` - Create new user (JSON: {name, email})
 - `GET /health` - Health check
 
-## Architecture
+From a browser, navigate to, for example, http://localhost:5000/users
 
-- **Data Layer**: Handles data persistence (currently stubbed)
-- **Service Layer**: Contains business logic and validation
-- **Web Layer**: Handles HTTP requests and responses
-- **Dependency Injection**: Layers are wired together in `app.py`
+## Self-guided tutorial to observe how the mutation testing gate works
+Let's say we want to enhance our project by adding the ability to find a user by their name. For educational purposes, we will add it to our service class instead.
+
+Inside service/user_service.py, add this method:
+```
+    def get_user_by_name(self, name):
+        """Get a specific user by name"""
+        users = self.repository.get_all()
+        matching_users = list(filter(lambda u: u["name"] == name, users))
+        if not matching_users:
+            raise ValueError(f"User with name {name} not found")
+        if matching_users.size() > 1:
+            raise ValueError(f"Multiple users with name {name} found")
+        return matching_users[0]
+```
+
+Inside tests/test_user_service.py, add a new test method that does not properly assert on the result:
+```
+    def test_get_user_by_name_found(self):
+        self.mock_repo.get_all.return_value = [
+            {"id": 1, "name": "Alice", "email": "alice@example.com"},
+            {"id": 2, "name": "Bob", "email": "bob@example.com"}
+        ]
+        user = self.service.get_user_by_name("Alice")
+```
+
+Create a pull request. The mutation testing gate should fail with an error about the mutation score being below the threshold.
+
+View the pull request logs.  You should see all of the mutations that were injected and uncaught by tests.
+
+An even faster way to iterate is to run mutmut locally using these commands:
+```
+mutmut run; mutmut export-cicd-stats; cat mutants/mutmut-cicd-stats.json
+```
+Divide the 'killed' mutants by the 'total' mutants to get the mutation score.
+
+You can iteratively fix individual mutants by running
+```
+mutmut browse
+```
+and using the 'r' or 'm' commands to retest specific sections of the project.
+
+Now let's improve the test we added by adding some asserts.
+```
+    def test_get_user_by_name_found(self):
+        self.mock_repo.get_all.return_value = [
+            {"id": 1, "name": "Alice", "email": "alice@example.com"},
+            {"id": 2, "name": "Bob", "email": "bob@example.com"}
+        ]
+        user = self.service.get_user_by_name("Alice")
+        self.assertEqual(user["name"], "Alice")
+        self.assertEqual(user["id"], 1)
+        self.mock_repo.get_all.assert_called_once()
+```
+
+Push these changes.  Your pull request should now pass the gate.
