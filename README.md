@@ -5,10 +5,6 @@ Sample repo showing how to enforce mutation testing threshold gates on pull requ
 ## Setup
  
 ```bash
-# Create virtual environment
-python -m venv .venv
-source .venv/bin/activate
-
 # Install dependencies
 pip install -r requirements.txt
 ```
@@ -64,18 +60,10 @@ Inside tests/test_user_service.py, add a new test method that does not properly 
 Create a pull request. The mutation testing gate should fail with an error about the mutation score being below the threshold.
 
 View the pull request logs.  You should see all of the mutations that were injected and uncaught by tests.
+![Screenshots showing the log](images/screenshot_log1.png)
 
-An even faster way to iterate is to run mutmut locally using these commands:
-```
-mutmut run; mutmut export-cicd-stats; cat mutants/mutmut-cicd-stats.json
-```
-Divide the 'killed' mutants by the 'total' mutants to get the mutation score.
-
-You can iteratively fix individual mutants by running
-```
-mutmut browse
-```
-and using the 'r' or 'm' commands to retest specific sections of the project.
+If you scroll down, you can see some mutants injected for your new method.
+![Screenshots showing the log](images/screenshot_log2.png)
 
 Now let's improve the test we added by adding some asserts.
 ```
@@ -90,4 +78,4 @@ Now let's improve the test we added by adding some asserts.
         self.mock_repo.get_all.assert_called_once()
 ```
 
-Push these changes.  Your pull request should now pass the gate.
+Push these changes to your branch.  Your pull request should now pass the gate.
