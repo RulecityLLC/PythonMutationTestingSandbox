@@ -46,7 +46,7 @@ Inside service/user_service.py, add this method:
         matching_users = list(filter(lambda u: u["name"] == name, users))
         if not matching_users:
             raise ValueError(f"User with name {name} not found")
-        if matching_users.size() > 1:
+        if len(matching_users) > 1:
             raise ValueError(f"Multiple users with name {name} found")
         return matching_users[0]
 ```
