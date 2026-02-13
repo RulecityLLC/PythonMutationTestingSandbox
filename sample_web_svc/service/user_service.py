@@ -20,6 +20,16 @@ class UserService:
             raise ValueError(f"User with id {user_id} not found")
         return user
 
+    def get_user_by_name(self, name):
+        """Get a specific user by name"""
+        users = self.repository.get_all()
+        matching_users = list(filter(lambda u: u["name"] == name, users))
+        if not matching_users:
+            raise ValueError(f"User with name {name} not found")
+        if len(matching_users) > 1:
+            raise ValueError(f"Multiple users with name {name} found")
+        return matching_users[0]
+
     def create_user(self, user_data):
         """Create a new user with validation"""
         # Business logic: validate input

@@ -55,3 +55,10 @@ class TestUserService(unittest.TestCase):
         user = self.service.create_user(user_data)
         self.assertEqual(user["name"], "Charlie")
         self.mock_repo.create.assert_called_with(user_data)
+
+    def test_get_user_by_name_found(self):
+        self.mock_repo.get_all.return_value = [
+            {"id": 1, "name": "Alice", "email": "alice@example.com"},
+            {"id": 2, "name": "Bob", "email": "bob@example.com"}
+        ]
+        user = self.service.get_user_by_name("Alice")
