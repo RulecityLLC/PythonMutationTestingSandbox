@@ -61,6 +61,3 @@ class TestUserRepository(unittest.TestCase):
 
         user = self.repo.get_by_id(3)
         self.assertIsNotNone(user)
-#        self.assertEqual(user['id'], 2)
-#        self.assertEqual(user['name'], 'Bob')
-#        self.assertEqual(user['email'], 'bob@example.com')
