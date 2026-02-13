@@ -62,3 +62,6 @@ class TestUserService(unittest.TestCase):
             {"id": 2, "name": "Bob", "email": "bob@example.com"}
         ]
         user = self.service.get_user_by_name("Alice")
+        self.assertEqual(user["name"], "Alice")
+        self.assertEqual(user["id"], 1)
+        self.mock_repo.get_all.assert_called_once()
