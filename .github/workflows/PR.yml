@@ -37,7 +37,7 @@ jobs:
       run: |
         source .venv/bin/activate
         mutmut export-cicd-stats
-        ci/mutation_score_check.py mutants/mutmut-cicd-stats.json 81
+        ci/mutation_score_check.py mutants/mutmut-cicd-stats.json 82
 
     - name: Print survived mutants
       if: ${{ failure() }}
